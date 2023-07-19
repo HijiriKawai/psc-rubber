@@ -14,7 +14,7 @@ from keras.layers import Flatten
 from keras_self_attention import SeqSelfAttention
 from keras.layers.core import Activation  # 活性化関数
 from keras.optimizers import Adam  # 最適化関数
-from tensorflow.keras.utils import plot_model  # モデル図
+from keras.utils import plot_model  # モデル図
 from keras.utils import np_utils
 
 # ハイパーパラメータの調整用
@@ -24,50 +24,44 @@ from keras.wrappers.scikit_learn import KerasRegressor  # これを使うのは�
 #%%
 # csvファイル読み込み
 # BOM付きなのでencoding="utf_8_sig"を指定
-csv100 = np.loadtxt("csv/100.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
-csv200 = np.loadtxt("csv/200.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
-csv300 = np.loadtxt("csv/300.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
-csv500 = np.loadtxt("csv/500.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
-csv600 = np.loadtxt("csv/600.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
-csv700 = np.loadtxt("csv/700.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
+
+#445g
+csv_convex = np.loadtxt("./data/convex.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
+#692g
+csv_cylinder = np.loadtxt("./data/cylinder.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
+#1118g
+csv_wall = np.loadtxt("./data/wall.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
+
+
 
 # 時間の行を削除
-csv100 = np.delete(csv100, 0, 0)
-csv200 = np.delete(csv200, 0, 0)
-csv300 = np.delete(csv300, 0, 0)
-csv500 = np.delete(csv500, 0, 0)
-csv600 = np.delete(csv600, 0, 0)
-csv700 = np.delete(csv700, 0, 0)
+csv_convex = np.delete(csv_convex, 0, 0)
+csv_cylinder = np.delete(csv_cylinder, 0, 0)
+csv_wall = np.delete(csv_wall, 0, 0)
+
 # %%
 # データを格納、学習に使う長さを指定
-length = 101
+length_start = 1200
+length_end = 3000
 
 data = []  # 入力値
 target = []  # 教師データ
 
 # 入力値と教師データを格納
-for i in range(csv100.shape[0]):  # データの数
-    data.append(csv100[i][0:length])
+for i in range(csv_convex.shape[0]):  # データの数
+    data.append(csv_convex[i][length_start:length_end])
     target.append(0)
-for i in range(csv200.shape[0]):
-    data.append(csv200[i][0:length])
+for i in range(csv_cylinder.shape[0]):
+    data.append(csv_cylinder[i][length_start:length_end])
     target.append(1)
-for i in range(csv300.shape[0]):
-    data.append(csv300[i][0:length])
+for i in range(csv_wall.shape[0]):
+    data.append(csv_wall[i][length_start:length_end])
     target.append(2)
-for i in range(csv500.shape[0]):
-    data.append(csv500[i][0:length])
-    target.append(3)
-for i in range(csv600.shape[0]):
-    data.append(csv600[i][0:length])
-    target.append(4)
-for i in range(csv700.shape[0]):
-    data.append(csv700[i][0:length])
-    target.append(5)
+
 # %%
 # kerasで学習できる形に変換
 # リストから配列に変換
-x = np.array(data).reshape(len(data), length, 1)
+x = np.array(data).reshape(len(data), length_end - length_start, 1)
 t = np.array(target).reshape(len(target), 1)
 t = np_utils.to_categorical(t)  # 教師データをone-hot表現に変換
 
@@ -80,9 +74,9 @@ x_valid, x_test, t_valid, t_test = train_test_split(
 )
 # %%
 # 入力、隠れ、出力のノード数
-l_in = len(x[0])  # 101
+l_in = len(x[0])
 l_hidden = 30
-l_out = 6
+l_out = 3
 #%%
 """
 #ハイパーパラメータ調整
@@ -153,7 +147,7 @@ result = model.fit(
 )
 
 model.summary()  # モデルの詳細を表示
-plot_model(model,to_file='result/self-attention/model_self-attention1.png',show_shapes=True) #モデル図
+plot_model(model,to_file='result/self-attention/self-attention_model.png',show_shapes=True) #モデル図
 
 #%%
 # 正解率の可視化
@@ -162,7 +156,7 @@ plt.plot(range(1, epochs + 1), result.history["accuracy"], label="train_acc") # 
 plt.plot(range(1, epochs + 1), result.history["val_accuracy"], label="valid_acc") # type: ignore
 plt.xlabel("Epochs")
 plt.ylabel("Accuracy")
-plt.savefig("result/self-attention/self-attention_accuracy1.png")
+plt.savefig("result/self-attention/self-attention_accuracy.png")
 plt.show()
 # %%
 # 損失関数の可視化
@@ -171,7 +165,7 @@ plt.plot(range(1, epochs + 1), result.history["loss"], label="training_loss") # 
 plt.plot(range(1, epochs + 1), result.history["val_loss"], label="validation_loss") # type: ignore
 plt.xlabel("Epochs")
 plt.ylabel("Loss")
-plt.savefig("result/self-attention/self-attention_loss1.png")
+plt.savefig("result/self-attention/self-attention_loss.png")
 plt.show()
 #%%
 # 学習モデルを用いてx_trainから予測
@@ -203,8 +197,8 @@ def print_mtrix(t_true, t_predict):
     mtrix_data = confusion_matrix(t_true, t_predict)
     df_mtrix = pd.DataFrame(
         mtrix_data,
-        index=["100g", "200g", "300g", "500g", "600g", "700g"],
-        columns=["100g", "200g", "300g", "500g", "600g", "700g"],
+        index=["445g", "692g", "1118g"],
+        columns=["445g", "692g", "1118g"],
     )
 
     plt.figure(dpi=700)
@@ -212,7 +206,7 @@ def print_mtrix(t_true, t_predict):
     plt.title("LSTM")
     plt.xlabel("Predictit label", fontsize=13)
     plt.ylabel("True label", fontsize=13)
-    plt.savefig("result/self-attention/self-attention.png")
+    plt.savefig("result/self-attention/self-attention_matrix.png")
     plt.show()
 
 
