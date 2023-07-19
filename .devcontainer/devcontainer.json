@@ -1,0 +1,22 @@
+{
+	"name": "dev-container",
+	"dockerComposeFile": [
+		"../docker-compose.yml"
+	],
+	"service": "research",
+	"remoteUser": "researcher",
+	"workspaceFolder": "/home/researcher",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"MS-CEINTL.vscode-language-pack-ja",
+				"ms-python.python",
+				"DavidAnson.vscode-markdownlint",
+				"ms-python.vscode-pylance",
+				"ms-python.isort",
+				"yzhang.markdown-all-in-one",
+				"bierner.markdown-preview-github-styles"
+			]
+		}
+	}
+}

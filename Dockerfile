@@ -2,6 +2,11 @@ FROM sonoisa/deep-learning-coding:pytorch1.12.0_tensorflow2.9.1
 
 USER root
 
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+RUN wget --progress=dot:giga -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null \
+  && echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ focal main' | tee /etc/apt/sources.list.d/kitware.list >/dev/null
+
 RUN apt-get update \
   && apt-get -y --no-install-recommends install graphviz=2.42.2-3build2 \
   && apt-get clean \  
