@@ -5,6 +5,7 @@
 .keras/
 .rustup/
 __pycache__/
+.dotnet/
 
 .gitconfig
 .python_history
