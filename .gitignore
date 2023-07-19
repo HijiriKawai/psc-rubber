@@ -11,3 +11,5 @@ __pycache__/
 .python_history
 .bash_history
 .DS_Store
+
+~$*.xlsx
