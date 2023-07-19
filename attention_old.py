@@ -41,7 +41,7 @@ csv_wall = np.delete(csv_wall, 0, 0)
 
 # %%
 # データを格納、学習に使う長さを指定
-length_start = 1200
+length_start = 1500
 length_end = 3000
 
 data = []  # 入力値
@@ -49,19 +49,22 @@ target = []  # 教師データ
 
 # 入力値と教師データを格納
 for i in range(csv_convex.shape[0]):  # データの数
-    data.append(csv_convex[i][length_start:length_end])
+    tmp = csv_convex[i][length_start:length_end]
+    data.append(tmp[::2]) #データ数を半分にしながら挿入
     target.append(0)
 for i in range(csv_cylinder.shape[0]):
-    data.append(csv_cylinder[i][length_start:length_end])
+    tmp = csv_cylinder[i][length_start:length_end]
+    data.append(tmp[::2])
     target.append(1)
 for i in range(csv_wall.shape[0]):
-    data.append(csv_wall[i][length_start:length_end])
+    tmp = csv_wall[i][length_start:length_end]
+    data.append(tmp[::2])
     target.append(2)
 
 # %%
 # kerasで学習できる形に変換
 # リストから配列に変換
-x = np.array(data).reshape(len(data), length_end - length_start, 1)
+x = np.array(data).reshape(len(data), int((length_end - length_start)/2) , 1)
 t = np.array(target).reshape(len(target), 1)
 t = np_utils.to_categorical(t)  # 教師データをone-hot表現に変換
 
@@ -157,7 +160,6 @@ plt.plot(range(1, epochs + 1), result.history["val_accuracy"], label="valid_acc"
 plt.xlabel("Epochs")
 plt.ylabel("Accuracy")
 plt.savefig("result/self-attention/self-attention_accuracy.png")
-plt.show()
 # %%
 # 損失関数の可視化
 plt.figure(dpi=700)
@@ -166,7 +168,6 @@ plt.plot(range(1, epochs + 1), result.history["val_loss"], label="validation_los
 plt.xlabel("Epochs")
 plt.ylabel("Loss")
 plt.savefig("result/self-attention/self-attention_loss.png")
-plt.show()
 #%%
 # 学習モデルを用いてx_trainから予測
 score_train = model.predict(x_train)
@@ -207,13 +208,12 @@ def print_mtrix(t_true, t_predict):
     plt.xlabel("Predictit label", fontsize=13)
     plt.ylabel("True label", fontsize=13)
     plt.savefig("result/self-attention/self-attention_matrix.png")
-    plt.show()
 
 
 #%%
 # 各データのカウントができないので変形
 t_test_change = []
-for i in range(96):
+for i in range(6):
     t_test_change.append(np.argmax(t_test[i]))
 
 # 混合行列に使用するデータを格納
