@@ -1,0 +1,12 @@
+.vscode/
+.vscode-server/
+.ssh/
+.cache/
+.keras/
+.rustup/
+__pycache__/
+
+.gitconfig
+.python_history
+.bash_history
+.DS_Store
