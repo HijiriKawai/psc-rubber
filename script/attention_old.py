@@ -1,4 +1,5 @@
 #%%
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -25,12 +26,14 @@ from keras.wrappers.scikit_learn import KerasRegressor  # これを使うのは�
 # csvファイル読み込み
 # BOM付きなのでencoding="utf_8_sig"を指定
 
+home = os.environ['HOME'];
+
 #445g
-csv_convex = np.loadtxt("./data/convex.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
+csv_convex = np.loadtxt(f"{home}/data/convex.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
 #692g
-csv_cylinder = np.loadtxt("./data/cylinder.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
+csv_cylinder = np.loadtxt(f"{home}/data/cylinder.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
 #1118g
-csv_wall = np.loadtxt("./data/wall.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
+csv_wall = np.loadtxt(f"{home}/data/wall.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
 
 
 
