@@ -153,7 +153,7 @@ result = model.fit(
 )
 
 model.summary()  # モデルの詳細を表示
-plot_model(model,to_file='result/self-attention/self-attention_model.png',show_shapes=True) #モデル図
+plot_model(model,to_file=f"{home}/result/self-attention/self-attention_model.png",show_shapes=True) #モデル図
 
 #%%
 # 正解率の可視化
@@ -162,7 +162,7 @@ plt.plot(range(1, epochs + 1), result.history["accuracy"], label="train_acc") # 
 plt.plot(range(1, epochs + 1), result.history["val_accuracy"], label="valid_acc") # type: ignore
 plt.xlabel("Epochs")
 plt.ylabel("Accuracy")
-plt.savefig("result/self-attention/self-attention_accuracy.png")
+plt.savefig(f"{home}/result/self-attention/self-attention_accuracy.png")
 # %%
 # 損失関数の可視化
 plt.figure(dpi=700)
@@ -170,7 +170,7 @@ plt.plot(range(1, epochs + 1), result.history["loss"], label="training_loss") # 
 plt.plot(range(1, epochs + 1), result.history["val_loss"], label="validation_loss") # type: ignore
 plt.xlabel("Epochs")
 plt.ylabel("Loss")
-plt.savefig("result/self-attention/self-attention_loss.png")
+plt.savefig(f"{home}/result/self-attention/self-attention_loss.png")
 #%%
 # 学習モデルを用いてx_trainから予測
 score_train = model.predict(x_train)
@@ -210,7 +210,7 @@ def print_mtrix(t_true, t_predict):
     plt.title("LSTM")
     plt.xlabel("Predictit label", fontsize=13)
     plt.ylabel("True label", fontsize=13)
-    plt.savefig("result/self-attention/self-attention_matrix.png")
+    plt.savefig(f"{home}/result/self-attention/self-attention_matrix.png")
 
 
 #%%
