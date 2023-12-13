@@ -3,6 +3,12 @@ Simple training loop; Boilerplate that could apply to any arbitrary neural netwo
 so nothing in this file really has anything to do with GPT specifically.
 """
 
+import sys
+import os
+
+home = os.environ['HOME'];
+sys.path.append(f"{home}")
+
 import logging
 import math
 
@@ -11,7 +17,7 @@ import tensorflow as tf
 
 from tensorflow.python.distribute.values import PerReplica
 from fastprogress import master_bar, progress_bar
-from mingpt.optimization import AdamWeightDecay
+from my_model.mingpt.optimization import AdamWeightDecay
 
 logger = logging.getLogger(__name__)
 

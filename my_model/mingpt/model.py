@@ -12,6 +12,8 @@ import math
 
 import six
 import tensorflow as tf
+from tensorflow import keras
+from keras import Model, Input
 
 logger = logging.getLogger(__name__)
 
