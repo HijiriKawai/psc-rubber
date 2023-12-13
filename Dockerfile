@@ -14,7 +14,7 @@ RUN apt-get update \
 
 RUN useradd -m -s /bin/bash researcher \
   && chown -R researcher /home/researcher \
-  && pip install --no-cache-dir  pandas==1.5.2 seaborn==0.12.1 scikit-learn==1.2.0 keras_self_attention==0.51.0 flake8==6.0.0 pydot==1.4.2 graphviz==0.20.1 xlsx2csv==0.8.1
+  && pip install --no-cache-dir  pandas==1.5.2 seaborn==0.12.1 scikit-learn==1.2.0 keras_self_attention==0.51.0 flake8==6.0.0 pydot==1.4.2 graphviz==0.20.1 xlsx2csv==0.8.1 transformers==4.25.1 fastprogress==0.2.3
 
 WORKDIR /home/researcher
 
