@@ -1,8 +1,7 @@
 import random
 
 import numpy as np
-import tensorflow as tf
-
+import tensorflow as tf 
 
 def set_seed(seed):
     random.seed(seed)
@@ -39,6 +38,7 @@ def sample(model, x, steps, temperature=1.0, sample=False, top_k=None):
         else:
             _, ix = tf.math.top_k(probs, k=1)
         # append to the sequence and continue
+        ix = tf.cast(ix, tf.float32)
         x = tf.concat((x,ix), axis=1)
 
     return x
