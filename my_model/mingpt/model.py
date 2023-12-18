@@ -13,7 +13,7 @@ import math
 import six
 import tensorflow as tf
 from tensorflow import keras
-from keras import Model, Input
+from keras import Model, Input, layers
 
 logger = logging.getLogger(__name__)
 
@@ -217,3 +217,47 @@ class GPT(tf.keras.Model):
         x = self.ln_f(x)
         logits = self.head(x)
         return logits
+
+class GPTClaaifier(Model): 
+    def __init__(self, config, num_classes):
+        super().__init__()
+
+        # input embedding stem
+        self.tok_emb = tf.keras.layers.Embedding(config.vocab_size,
+                                                 config.n_embd,
+                                                 embeddings_initializer=tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.02))
+        self.pos_emb = self.add_weight("position_embeddings",
+                                       shape=[config.block_size,
+                                              config.n_embd],
+                                       initializer=tf.keras.initializers.Zeros(),
+                                       dtype=tf.float32)
+        self.drop = tf.keras.layers.Dropout(config.embd_pdrop)
+        # transformer
+        self.blocks = [EncoderLayer(config.n_embd, config.n_head, config.attn_pdrop, config.resid_pdrop)
+                       for _ in range(config.n_layer)]
+        # decoder head
+        self.pool = layers.GlobalAveragePooling2D()
+        self.classfier = layers.Dense(num_classes, activation="softmax")
+
+        self.block_size = config.block_size
+        self.n_embd = config.n_embd
+        self.n_layer = config.n_layer
+
+    def call(self, inputs: tf.Tensor, training=False):
+        t = tf.shape(inputs)[1]
+        # assert t <= self.block_size, "Cannot forward, model block size is exhausted."
+
+        # forward the GPT model
+        # each index maps to a (learnable) vector
+        token_embeddings = self.tok_emb(inputs)
+        position_embeddings = tf.expand_dims(tf.slice(self.pos_emb, [0, 0], [t, self.n_embd]),
+                                             axis=0)  # each position maps to a (learnable) vector
+        x = self.drop(token_embeddings +
+                      position_embeddings, training=training)
+        mask = 1 - tf.linalg.band_part(tf.ones((t, t)), -1, 0) # type: ignore
+        for i in range(self.n_layer):
+            x = self.blocks[i](x, mask, training=training)
+        x = self.pool(x)
+        x = self.drop(x)
+        x = self.classfier(x)
+        return x

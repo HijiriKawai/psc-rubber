@@ -11,9 +11,8 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import tensorflow as tf
 from keras.utils import np_utils
-from my_model.mingpt.model import GPT, GPT1Config, GPTConfig 
-from my_model.mingpt.trainer import TrainerConfig, Trainer
-from my_model.mingpt.utils import sample
+from my_model.mingpt.model import GPT, GPT1Config, GPTClaaifier, GPTConfig 
+from my_model.mingpt.optimization import AdamWeightDecay
 
 
 class Dataset:
@@ -74,50 +73,71 @@ csv_wall = np.delete(csv_wall, 0, 0)
 length_start = 1500
 length_end = 3000
 
-data = []  # 入力値 + 教師データ
+data = []  # 入力値
+target = []#教師データ
 
 # 入力値と教師データを格納
 for i in range(csv_convex.shape[0]):  # データの数
     tmp = csv_convex[i][length_start:length_end]
-    tmp = tmp[::2] #データ数を半分に
-    tmp = np.append(tmp, 0) #教師データ追加
-
-    data.append(tmp) 
+    data.append(tmp[::2]) #データ数を半分にしながら挿入
+    target.append(0)
 for i in range(csv_cylinder.shape[0]):
     tmp = csv_cylinder[i][length_start:length_end]
-    tmp = tmp[::2] #データ数を半分に
-    tmp = np.append(tmp, 1)  #教師データ追加
-    data.append(tmp) 
+    data.append(tmp[::2])
+    target.append(1)
 for i in range(csv_wall.shape[0]):
     tmp = csv_wall[i][length_start:length_end]
-    tmp = tmp[::2] #データ数を半分に
-    tmp = np.append(tmp, 2)  #教師データ追加
-    data.append(tmp) 
+    data.append(tmp[::2])
+    target.append(2)
 
 
 # 訓練データ、テストデータに分割
-x_train, x_test = train_test_split(
-    data, test_size=int(len(data) * 0.4), 
+x = np.array(data).reshape(len(data), int((length_end - length_start)/2) , 1)
+t = np.array(target).reshape(len(target), 1)
+t = np_utils.to_categorical(t)  # 教師データをone-hot表現に変換
+
+# 訓練データ、検証データ、テストデータに分割
+x_train, x_test, t_train, t_test = train_test_split(
+    x, t, test_size=int(len(data) * 0.4), stratify=t
+)
+x_valid, x_test, t_valid, t_test = train_test_split(
+    x_test, t_test, test_size=int(len(x_test) * 0.5), stratify=t_test
 )
 
-train_dataset_gen = Dataset(x_train)
-test_dataset_gen = Dataset(x_test)
+m_conf = GPTConfig(len(x[0]), 750, n_layer=2, n_head=4, n_embd=128)
+model = GPTClaaifier(m_conf, 3) 
+model.compile(optimizer=AdamWeightDecay(), loss='categorical_crossentropy', metrics=['accuracy'])
 
-train_dataset = tf.data.Dataset.from_generator(train_dataset_gen,(tf.float32,tf.float32))
-test_dataset = tf.data.Dataset.from_generator(test_dataset_gen,(tf.float32,tf.float32))
+result = model.fit(
+    x_train,
+    t_train,
+    batch_size=512,
+    epochs=10,
+    validation_data=(x_valid, t_valid),
+)
 
-m_conf = GPTConfig(train_dataset_gen.vocab_size, train_dataset_gen.block_size, 
-                  n_layer=2, n_head=4, n_embd=128)
-t_conf = TrainerConfig(max_epochs=5, batch_size=512, learning_rate=6e-4,
-                      lr_decay=True, warmup_tokens=1024, final_tokens=50*len(train_dataset_gen)*(4),
-                      num_workers=4)
+loss, accuracy = model.evaluate(x_test, t_test)
+print('Test loss:', loss)
+print('Test accuracy:', accuracy)
 
-trainer = Trainer(model=GPT,model_config=m_conf,train_dataset=train_dataset,train_dataset_len=len(train_dataset_gen),test_dataset=test_dataset, test_dataset_len=len(test_dataset_gen), config=t_conf)
-trainer.train()
+# train_dataset_gen = Dataset(x_train)
+# test_dataset_gen = Dataset(x_test)
 
-print("test_start")
-loader = train_dataset.batch(512)
-for b, (x, y) in enumerate(loader):
-  result = sample(trainer.model,x,1,sample=True)
-  print("result:")
-  print(result)
+# train_dataset = tf.data.Dataset.from_generator(train_dataset_gen,(tf.float32,tf.float32))
+# test_dataset = tf.data.Dataset.from_generator(test_dataset_gen,(tf.float32,tf.float32))
+
+# m_conf = GPTConfig(train_dataset_gen.vocab_size, train_dataset_gen.block_size, 
+#                   n_layer=2, n_head=4, n_embd=128)
+# t_conf = TrainerConfig(max_epochs=5, batch_size=512, learning_rate=6e-4,
+#                       lr_decay=True, warmup_tokens=1024, final_tokens=50*len(train_dataset_gen)*(4),
+#                       num_workers=4)
+
+# trainer = Trainer(model=GPT,model_config=m_conf,train_dataset=train_dataset,train_dataset_len=len(train_dataset_gen),test_dataset=test_dataset, test_dataset_len=len(test_dataset_gen), config=t_conf)
+# trainer.train()
+
+# print("test_start")
+# loader = train_dataset.batch(512)
+# for b, (x, y) in enumerate(loader):
+#   result = sample(trainer.model,x,1,sample=True)
+#   print("result:")
+#   print(result)
