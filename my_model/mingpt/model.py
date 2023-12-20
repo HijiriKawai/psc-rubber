@@ -220,7 +220,7 @@ class GPT(tf.keras.Model):
         logits = self.head(x)
         return logits
 
-class GPTClaaifier(Model): 
+class TransformerClassifier(Model): 
     def __init__(self, config, num_classes, input_shape):
         super().__init__()
 
