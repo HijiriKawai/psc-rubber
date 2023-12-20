@@ -185,7 +185,7 @@ def print_mtrix(t_true, t_predict):
 
     plt.figure(dpi=700)
     sb.heatmap(df_mtrix, annot=True, fmt="g", square=True, cmap="Blues")
-    plt.title("LSTM")
+    plt.title("GPTLIKE")
     plt.xlabel("Predictit label", fontsize=13)
     plt.ylabel("True label", fontsize=13)
     plt.savefig(f"{home}/result/gptlike/gptlike_matrix.png")
