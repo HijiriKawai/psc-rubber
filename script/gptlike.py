@@ -98,7 +98,7 @@ for i in range(csv_wall.shape[0]):
 
 
 # 訓練データ、テストデータに分割
-x = np.array(data).reshape(len(data), int((length_end - length_start) / 2), 1)
+x = np.array(data).reshape(len(data), int((length_end - length_start) / skip_num), 1)
 t = np.array(target).reshape(len(target), 1)
 t = np_utils.to_categorical(t)  # 教師データをone-hot表現に変換
 
