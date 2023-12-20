@@ -2,16 +2,14 @@ from pyexpat import model
 import sys
 import os
 
-from py import test
-
 home = os.environ["HOME"]
 sys.path.append(f"{home}")
 
 from sklearn.model_selection import train_test_split
 import numpy as np
 import tensorflow as tf
-from keras.utils import np_utils, plot_model
-from my_model.mingpt.model import GPT, GPT1Config, GPTClaaifier, GPTConfig
+from keras.utils import np_utils
+from my_model.mingpt.model import GPTClaaifier, GPTConfig
 from my_model.mingpt.optimization import AdamWeightDecay
 import matplotlib.pyplot as plt
 import seaborn as sb  # 混合行列
