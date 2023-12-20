@@ -103,7 +103,7 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         x = tf.reshape(x, (batch_size, -1, self.num_heads, self.depth))
         return tf.transpose(x, perm=[0, 2, 1, 3])
 
-    def call(self, x, mask, training):
+    def call(self, x, training):
         batch_size = tf.shape(x)[0]
 
         q = self.wq(x)  # (batch_size, seq_len, d_model)
@@ -122,8 +122,8 @@ class MultiHeadAttention(tf.keras.layers.Layer):
         dk = tf.cast(tf.shape(k)[-1], tf.float32)
         scaled_attention_logits = matmul_qk / tf.math.sqrt(dk)
         # add the mask to the scaled tensor.
-        if mask is not None:
-            scaled_attention_logits += (mask * -1e9)
+        #if mask is not None:
+        #    scaled_attention_logits += (mask * -1e9)
         # softmax is normalized on the last axis (seq_len_k) so that the scores
         # add up to 1.
         attention_weights = tf.nn.softmax(
@@ -166,9 +166,11 @@ class EncoderLayer(tf.keras.layers.Layer):
         self.layernorm1 = tf.keras.layers.LayerNormalization(epsilon=1e-5)
         self.layernorm2 = tf.keras.layers.LayerNormalization(epsilon=1e-5)
 
-    def call(self, x, mask, training):
-        x = x + self.mha(self.layernorm1(x), mask, training=training)
-        x = x + self.ffn(self.layernorm2(x), training=training)
+    def call(self, x, training):
+        x = x + self.mha(x, training=training)
+        x = self.layernorm1(x)
+        x = x + self.ffn(x, training=training)
+        self.layernorm2(x)
         return x
 
 
@@ -219,13 +221,11 @@ class GPT(tf.keras.Model):
         return logits
 
 class GPTClaaifier(Model): 
-    def __init__(self, config, num_classes):
+    def __init__(self, config, num_classes, input_shape):
         super().__init__()
 
         # input embedding stem
-        self.tok_emb = tf.keras.layers.Embedding(config.vocab_size,
-                                                 config.n_embd,
-                                                 embeddings_initializer=tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.02))
+        self.tok_emb = layers.Dense(config.n_embd, input_shape=input_shape)
         self.pos_emb = self.add_weight("position_embeddings",
                                        shape=[config.block_size,
                                               config.n_embd],
@@ -236,7 +236,7 @@ class GPTClaaifier(Model):
         self.blocks = [EncoderLayer(config.n_embd, config.n_head, config.attn_pdrop, config.resid_pdrop)
                        for _ in range(config.n_layer)]
         # decoder head
-        self.pool = layers.GlobalAveragePooling2D()
+        self.pool = layers.GlobalAveragePooling1D()
         self.classfier = layers.Dense(num_classes, activation="softmax")
 
         self.block_size = config.block_size
@@ -254,9 +254,8 @@ class GPTClaaifier(Model):
                                              axis=0)  # each position maps to a (learnable) vector
         x = self.drop(token_embeddings +
                       position_embeddings, training=training)
-        mask = 1 - tf.linalg.band_part(tf.ones((t, t)), -1, 0) # type: ignore
         for i in range(self.n_layer):
-            x = self.blocks[i](x, mask, training=training)
+            x = self.blocks[i](x, training=training)
         x = self.pool(x)
         x = self.drop(x)
         x = self.classfier(x)

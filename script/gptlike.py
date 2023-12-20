@@ -110,14 +110,14 @@ x_valid, x_test, t_valid, t_test = train_test_split(
     x_test, t_test, test_size=int(len(x_test) * 0.5), stratify=t_test
 )
 
-m_conf = GPTConfig(len(x[0]), int((length_end - length_start) / skip_num), n_layer=1, n_head=4, n_embd=128)
-model = GPTClaaifier(m_conf, 3)
+m_conf = GPTConfig(int((length_end - length_start) / skip_num), int((length_end - length_start) / skip_num), n_layer=12, n_head=8, n_embd=64)
+model = GPTClaaifier(m_conf, 3, (x_train.shape[1],))
 model.compile(
     optimizer=AdamWeightDecay(), loss="categorical_crossentropy", metrics=["accuracy"]
 )
 
-epochs = 10
-batch_size = 512
+epochs = 50
+batch_size = 10
 
 result = model.fit(
     x_train,
@@ -126,10 +126,6 @@ result = model.fit(
     epochs=epochs,
     validation_data=(x_valid, t_valid),
 )
-
-loss, accuracy = model.evaluate(x_test, t_test)
-print("Test loss:", loss)
-print("Test accuracy:", accuracy)
 
 # %%
 # 正解率の可視化
