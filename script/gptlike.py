@@ -16,31 +16,31 @@ import seaborn as sb  # 混合行列
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 
-class Dataset:
-    def __init__(self, data):
-        vocab_size = 100  # 3種類の錘
-        length_start = 1500
-        length_end = 3000
+# class Dataset:
+#     def __init__(self, data):
+#         vocab_size = 100  # 3種類の錘
+#         length_start = 1500
+#         length_end = 3000
 
-        self.vocab_size = vocab_size
-        self.block_size = length_end - length_start
-        self.data = data
+#         self.vocab_size = vocab_size
+#         self.block_size = length_end - length_start
+#         self.data = data
 
-    def __len__(self):
-        return len(self.data)
+#     def __len__(self):
+#         return len(self.data)
 
-    def __iter__(self):
-        for i in range(self.__len__()):
-            item = self.data[i]
-            x = item[:-1]
-            y = item[1:]
+#     def __iter__(self):
+#         for i in range(self.__len__()):
+#             item = self.data[i]
+#             x = item[:-1]
+#             y = item[1:]
 
-            x = tf.convert_to_tensor(x, dtype=tf.float32)
-            y = tf.convert_to_tensor(y, dtype=tf.float32)
+#             x = tf.convert_to_tensor(x, dtype=tf.float32)
+#             y = tf.convert_to_tensor(y, dtype=tf.float32)
 
-            yield x, y
+#             yield x, y
 
-    __call__ = __iter__
+#     __call__ = __iter__
 
 
 # csv_1 = np.loadtxt(f"{home}/data/isodisplacement1.csv", delimiter=",", encoding="utf_8_sig", unpack=True, skiprows=3, usecols=[3,8,13,18,23,28,33,38,43,48])
@@ -77,6 +77,7 @@ csv_wall = np.delete(csv_wall, 0, 0)
 # データを格納、学習に使う長さを指定
 length_start = 1500
 length_end = 3000
+skip_num = 2
 
 data = []  # 入力値
 target = []  # 教師データ
@@ -84,15 +85,15 @@ target = []  # 教師データ
 # 入力値と教師データを格納
 for i in range(csv_convex.shape[0]):  # データの数
     tmp = csv_convex[i][length_start:length_end]
-    data.append(tmp[::2])  # データ数を半分にしながら挿入
+    data.append(tmp[::skip_num])  # データ数を半分にしながら挿入
     target.append(0)
 for i in range(csv_cylinder.shape[0]):
     tmp = csv_cylinder[i][length_start:length_end]
-    data.append(tmp[::2])
+    data.append(tmp[::skip_num])
     target.append(1)
 for i in range(csv_wall.shape[0]):
     tmp = csv_wall[i][length_start:length_end]
-    data.append(tmp[::2])
+    data.append(tmp[::skip_num])
     target.append(2)
 
 
@@ -109,7 +110,7 @@ x_valid, x_test, t_valid, t_test = train_test_split(
     x_test, t_test, test_size=int(len(x_test) * 0.5), stratify=t_test
 )
 
-m_conf = GPTConfig(len(x[0]), 750, n_layer=2, n_head=4, n_embd=128)
+m_conf = GPTConfig(len(x[0]), int((length_end - length_start) / skip_num), n_layer=1, n_head=4, n_embd=128)
 model = GPTClaaifier(m_conf, 3)
 model.compile(
     optimizer=AdamWeightDecay(), loss="categorical_crossentropy", metrics=["accuracy"]
@@ -137,7 +138,7 @@ plt.plot(range(1, epochs + 1), result.history["accuracy"], label="train_acc")  #
 plt.plot(range(1, epochs + 1), result.history["val_accuracy"], label="valid_acc")  # type: ignore
 plt.xlabel("Epochs")
 plt.ylabel("Accuracy")
-plt.savefig(f"{home}/result/self-attention/self-attention_accuracy.png")
+plt.savefig(f"{home}/result/gptlike/gptlike_accuracy.png")
 # %%
 # 損失関数の可視化
 plt.figure(dpi=700)
@@ -145,7 +146,7 @@ plt.plot(range(1, epochs + 1), result.history["loss"], label="training_loss")  #
 plt.plot(range(1, epochs + 1), result.history["val_loss"], label="validation_loss")  # type: ignore
 plt.xlabel("Epochs")
 plt.ylabel("Loss")
-plt.savefig(f"{home}/result/self-attention/self-attention_loss.png")
+plt.savefig(f"{home}/result/gptlike/gptlike_loss.png")
 # %%
 # 学習モデルを用いてx_trainから予測
 score_train = model.predict(x_train)
@@ -187,7 +188,7 @@ def print_mtrix(t_true, t_predict):
     plt.title("LSTM")
     plt.xlabel("Predictit label", fontsize=13)
     plt.ylabel("True label", fontsize=13)
-    plt.savefig(f"{home}/result/self-attention/self-attention_matrix.png")
+    plt.savefig(f"{home}/result/gptlike/gptlike_matrix.png")
 
 
 # %%
