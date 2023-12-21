@@ -101,10 +101,12 @@ def main():
   model_wall.trainable = False
 
   inputs = layers.Input((int((length_end - length_start) / skip_num),1,))
-  concatenated = layers.concatenate([model_convex(inputs), model_cylinder(inputs), model_wall(inputs)])
+  linear = layers.Dense(1, activation="linear")
+  concatenated = layers.concatenate([linear(model_convex(inputs)), linear(model_cylinder(inputs)), linear(model_wall(inputs))])
   flatten = layers.Flatten()(concatenated)
   softmaxed = layers.Dense(3, activation="softmax")(flatten)
   model = Model(inputs=inputs, outputs=softmaxed)
+  model.summary()
   model.compile(
       optimizer=optimizer, loss="categorical_crossentropy", metrics=["accuracy"]
   )

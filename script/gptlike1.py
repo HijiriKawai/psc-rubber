@@ -35,7 +35,7 @@ def main():
   # データを格納、学習に使う長さを指定
   length_start = 1500
   length_end = 3000
-  skip_num = 2
+  skip_num = 20
 
   data_convex = []
   data_cylinder = []
@@ -89,7 +89,7 @@ def main():
       x_wall_test, test_size=int(len(x_wall_test) * 0.5)
   )
 
-  m_conf = GPTConfig(int((length_end - length_start) / skip_num), int((length_end - length_start) / skip_num), n_layer=12, n_head=8, n_embd=64)
+  m_conf = GPTConfig(int((length_end - length_start) / skip_num), int((length_end - length_start) / skip_num), n_layer=1, n_head=8, n_embd=64)
   model_convex = GPT(m_conf,(x_convex_train.shape[1],))
   model_cylinder = GPT(m_conf,(x_cylinder_train.shape[1],))
   model_wall = GPT(m_conf,(x_wall_train.shape[1],))
