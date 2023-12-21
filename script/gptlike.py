@@ -30,9 +30,9 @@ class GPTClassifier(Model):
         self.linear = layers.Dense(1, activation="linear")
         self.softmax = layers.Dense(3, activation="softmax")
   def call(self, inputs: tf.Tensor, training=False):
-      x = self.gpt(inputs, training)
-      y = self.gpt(inputs, training)
-      z = self.gpt(inputs, training)
+      x = self.gpt(inputs, training=training)
+      y = self.gpt(inputs, training=training)
+      z = self.gpt(inputs, training=training)
 
       x = self.linear(x)
       y = self.linear(y)
