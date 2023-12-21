@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import tensorflow as tf
 from keras.utils import np_utils
-from my_model.mingpt.model import GPT, GPTConfig
+from my_model.mingpt.model import GPT, GPTConfig, TransformerClassifier
 from my_model.mingpt.optimization import AdamWeightDecay
 import matplotlib.pyplot as plt
 import seaborn as sb  # 混合行列
@@ -137,9 +137,9 @@ def main():
   )
 
   m_conf = GPTConfig(int((length_end - length_start) / skip_num), int((length_end - length_start) / skip_num), n_layer=12, n_head=8, n_embd=64)
-  model_convex = GPT(m_conf,(x_convex_train.shape[1],))
-  model_cylinder = GPT(m_conf,(x_cylinder_train.shape[1],))
-  model_wall = GPT(m_conf,(x_wall_train.shape[1],))
+  model_convex = TransformerClassifier(m_conf,2,(x_convex_train.shape[1],))
+  model_cylinder = TransformerClassifier(m_conf,2,(x_cylinder_train.shape[1],))
+  model_wall = TransformerClassifier(m_conf,2,(x_wall_train.shape[1],))
 
   learning_rate = 3e-4
   betas = (0.9, 0.95)
