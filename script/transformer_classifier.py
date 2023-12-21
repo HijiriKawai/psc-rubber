@@ -162,7 +162,7 @@ def print_mtrix(t_true, t_predict):
 # %%
 # 各データのカウントができないので変形
 t_test_change = []
-for i in range(6):
+for i in range(60):
     t_test_change.append(np.argmax(t_test[i]))
 
 # 混合行列に使用するデータを格納
