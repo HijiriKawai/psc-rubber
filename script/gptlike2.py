@@ -89,7 +89,7 @@ def main():
                                               beta_1=betas[0], beta_2=betas[1],
                                               gradient_clip_norm=grad_norm_clip,
                                               exclude_from_weight_decay=['layer_normalization', 'bias'])
-  epochs = 1
+  epochs = 5
   batch_size = 1
 
   model_convex = load_model(f"{home}/model_convex", custom_objects={"AdamWeightDecay": optimizer })
@@ -102,9 +102,11 @@ def main():
 
   inputs = layers.Input((int((length_end - length_start) / skip_num),1,))
   linear = layers.Dense(1, activation="linear")
-  concatenated = layers.concatenate([linear(model_convex(inputs)), linear(model_cylinder(inputs)), linear(model_wall(inputs))])
-  flatten = layers.Flatten()(concatenated)
-  softmaxed = layers.Dense(3, activation="softmax")(flatten)
+  softmaxed1 = layers.Dense(3, activation="softmax")(linear(layers.GlobalAveragePooling1D()(model_convex(inputs))))
+  softmaxed2 = layers.Dense(3, activation="softmax")(linear(layers.GlobalAveragePooling1D()(model_cylinder(inputs))))
+  softmaxed3 = layers.Dense(3, activation="softmax")(linear(layers.GlobalAveragePooling1D()(model_wall(inputs))))
+  added = layers.Add()([softmaxed1,softmaxed2,softmaxed3])
+  softmaxed = layers.Dense(3, activation="softmax")(added)
   model = Model(inputs=inputs, outputs=softmaxed)
   model.summary()
   model.compile(
