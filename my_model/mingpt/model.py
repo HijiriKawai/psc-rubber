@@ -213,9 +213,8 @@ class GPT(tf.keras.Model):
                                              axis=0)  # each position maps to a (learnable) vector
         x = self.drop(token_embeddings +
                       position_embeddings, training=training)
-        mask = 1 - tf.linalg.band_part(tf.ones((t, t)), -1, 0) # type: ignore
         for i in range(self.n_layer):
-            x = self.blocks[i](x, mask, training=training)
+            x = self.blocks[i](x, training=training)
         x = self.ln_f(x)
         logits = self.head(x)
         return logits
