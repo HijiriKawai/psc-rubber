@@ -102,7 +102,7 @@ def main():
 
   x_convex = np.array(data_convex).reshape(len(data_convex), int((length_end - length_start) / skip_num), 1)
   t_convex = np.array(target_convex).reshape(len(target_convex), 1)
-  t_convex = np_utils.to_categorical(t)  # 教師データをone-hot表現に変換
+  t_convex = np_utils.to_categorical(t_convex)  # 教師データをone-hot表現に変換
 
   # 訓練データ、検証データ、テストデータに分割
   x_convex_train, x_convex_test, t_convex_train, t_convex_test = train_test_split(
@@ -114,7 +114,7 @@ def main():
 
   x_cylinder = np.array(data_cylinder).reshape(len(data_cylinder), int((length_end - length_start) / skip_num), 1)
   t_cylinder = np.array(target_cylinder).reshape(len(target_cylinder), 1)
-  t_cylinder = np_utils.to_categorical(t)  # 教師データをone-hot表現に変換
+  t_cylinder = np_utils.to_categorical(t_cylinder)  # 教師データをone-hot表現に変換
 
   # 訓練データ、検証データ、テストデータに分割
   x_cylinder_train, x_cylinder_test, t_cylinder_train, t_cylinder_test = train_test_split(
@@ -126,7 +126,7 @@ def main():
 
   x_wall = np.array(data_wall).reshape(len(data_wall), int((length_end - length_start) / skip_num), 1)
   t_wall = np.array(target_wall).reshape(len(target_wall), 1)
-  t_wall = np_utils.to_categorical(t)  # 教師データをone-hot表現に変換
+  t_wall = np_utils.to_categorical(t_wall)  # 教師データをone-hot表現に変換
 
   # 訓練データ、検証データ、テストデータに分割
   x_wall_train, x_wall_test, t_wall_train, t_wall_test = train_test_split(
