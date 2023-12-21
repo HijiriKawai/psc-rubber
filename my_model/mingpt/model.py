@@ -177,13 +177,11 @@ class EncoderLayer(tf.keras.layers.Layer):
 class GPT(tf.keras.Model):
     """  the full GPT language model, with a context size of block_size """
 
-    def __init__(self, config):
+    def __init__(self, config, input_shape):
         super().__init__()
 
         # input embedding stem
-        self.tok_emb = tf.keras.layers.Embedding(config.vocab_size,
-                                                 config.n_embd,
-                                                 embeddings_initializer=tf.keras.initializers.RandomNormal(mean=0.0, stddev=0.02))
+        self.tok_emb = layers.Dense(config.n_embd, input_shape=input_shape)
         self.pos_emb = self.add_weight("position_embeddings",
                                        shape=[config.block_size,
                                               config.n_embd],

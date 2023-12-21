@@ -137,9 +137,9 @@ def main():
   )
 
   m_conf = GPTConfig(int((length_end - length_start) / skip_num), int((length_end - length_start) / skip_num), n_layer=12, n_head=8, n_embd=64)
-  model_convex = GPT(m_conf)
-  model_cylinder = GPT(m_conf)
-  model_wall = GPT(m_conf)
+  model_convex = GPT(m_conf,(x_convex_train.shape[1],))
+  model_cylinder = GPT(m_conf,(x_cylinder_train.shape[1],))
+  model_wall = GPT(m_conf,(x_wall_train.shape[1],))
 
   learning_rate = 3e-4
   betas = (0.9, 0.95)
