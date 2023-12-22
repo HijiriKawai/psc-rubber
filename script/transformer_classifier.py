@@ -60,7 +60,7 @@ for x in range(0, 10):
 
 
 # 訓練データ、テストデータに分割
-x = np.array(data).reshape(len(data), int((length_end - length_start) / skip_num), 1)
+x = np.array(data).reshape(len(data), int((length_end - length_start) / skip_num))
 t = np.array(target).reshape(len(target), 1)
 t = np_utils.to_categorical(t)  # 教師データをone-hot表現に変換
 
