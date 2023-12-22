@@ -8,11 +8,12 @@ from keras.utils import to_categorical, np_utils
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sb 
-import tensorflow as tf 
+import seaborn as sb
+import tensorflow as tf
 import os
 
 home = os.environ["HOME"]
+
 
 def print_mtrix(t_true, t_predict):
     mtrix_data = confusion_matrix(t_true, t_predict)
@@ -24,7 +25,7 @@ def print_mtrix(t_true, t_predict):
 
     plt.figure(dpi=700)
     sb.heatmap(df_mtrix, annot=True, fmt="g", square=True, cmap="Blues")
-    plt.title("LSTM")
+    plt.title("TRANSFORMERBLOCK")
     plt.xlabel("Predictit label", fontsize=13)
     plt.ylabel("True label", fontsize=13)
     plt.savefig(f"{home}/result/iris/iris_matrix.png")
@@ -52,7 +53,9 @@ class MultiHeadAttention(layers.Layer):
         return output, weights
 
     def separate_heads(self, x, batch_size):
-        x = tf.reshape(x, (batch_size, -1, self.num_heads, self.embed_dim // self.num_heads))
+        x = tf.reshape(
+            x, (batch_size, -1, self.num_heads, self.embed_dim // self.num_heads)
+        )
         return tf.transpose(x, perm=[0, 2, 1, 3])
 
     def call(self, inputs):
@@ -72,9 +75,10 @@ class MultiHeadAttention(layers.Layer):
         output = self.combine_heads(concat_attention)
         return output
 
+
 # Transformerブロックを定義
 class TransformerBlock(layers.Layer):
-    def __init__(self, embed_dim, num_heads, ff_dim, rate=0.1): # rate:ドロップアウトの割合
+    def __init__(self, embed_dim, num_heads, ff_dim, rate=0.1):  # rate:ドロップアウトの割合
         super(TransformerBlock, self).__init__()
         self.att = MultiHeadAttention(embed_dim, num_heads)
         self.ffn = tf.keras.Sequential(
@@ -85,7 +89,7 @@ class TransformerBlock(layers.Layer):
         self.dropout1 = layers.Dropout(rate)
         self.dropout2 = layers.Dropout(rate)
 
-    def call(self,inputs, training):
+    def call(self, inputs, training):
         attn_output = self.att(inputs)
         attn_output = self.dropout1(attn_output, training=training)
         out1 = self.layernorm1(inputs + attn_output)
@@ -93,25 +97,39 @@ class TransformerBlock(layers.Layer):
         ffn_output = self.dropout2(ffn_output, training=training)
         return self.layernorm2(out1 + ffn_output)
 
+
 # モデルの構築
 class TransformerClassifier(Model):
-    def __init__(self, num_classes, embed_dim, num_heads, ff_dim, input_shape, num_layers=2, rate=0.1):
+    def __init__(
+        self,
+        num_classes,
+        embed_dim,
+        num_heads,
+        ff_dim,
+        input_shape,
+        num_layers=2,
+        rate=0.1,
+    ):
         super(TransformerClassifier, self).__init__()
         self.embedding = layers.Dense(embed_dim, input_shape=input_shape)
-        #self.transformer_block = TransformerBlock(embed_dim, num_heads, ff_dim, rate)
-        self.transformer_blocks = [TransformerBlock(embed_dim, num_heads, ff_dim, rate) for _ in range(num_layers)]
+        # self.transformer_block = TransformerBlock(embed_dim, num_heads, ff_dim, rate)
+        self.transformer_blocks = [
+            TransformerBlock(embed_dim, num_heads, ff_dim, rate)
+            for _ in range(num_layers)
+        ]
         self.pool = layers.GlobalAveragePooling1D()
         self.dropout = layers.Dropout(rate)
-        self.classifier = layers.Dense(num_classes, activation='softmax')
+        self.classifier = layers.Dense(num_classes, activation="softmax")
 
     def call(self, inputs, training):
         x = self.embedding(inputs)
-        #x = self.transformer_block(x, training)
+        # x = self.transformer_block(x, training)
         for transformer_block in self.transformer_blocks:
             x = transformer_block(x, training=training)
         x = self.pool(x)
         x = self.dropout(x, training=training)
         return self.classifier(x)
+
 
 # カスタムコールバックの定義
 class CustomModelCheckpoint(tf.keras.callbacks.Callback):
@@ -127,14 +145,18 @@ class CustomModelCheckpoint(tf.keras.callbacks.Callback):
 
 
 def main():
-    #445g
-    csv_convex = np.loadtxt(f"{home}/data/convex.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
-    #692g
-    csv_cylinder = np.loadtxt(f"{home}/data/cylinder.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
-    #1118g
-    csv_wall = np.loadtxt(f"{home}/data/wall.csv", delimiter=",", encoding="utf_8_sig", unpack=True)
-
-
+    # 445g
+    csv_convex = np.loadtxt(
+        f"{home}/data/convex.csv", delimiter=",", encoding="utf_8_sig", unpack=True
+    )
+    # 692g
+    csv_cylinder = np.loadtxt(
+        f"{home}/data/cylinder.csv", delimiter=",", encoding="utf_8_sig", unpack=True
+    )
+    # 1118g
+    csv_wall = np.loadtxt(
+        f"{home}/data/wall.csv", delimiter=",", encoding="utf_8_sig", unpack=True
+    )
 
     # 時間の行を削除
     csv_convex = np.delete(csv_convex, 0, 0)
@@ -168,7 +190,7 @@ def main():
     # %%
     # kerasで学習できる形に変換
     # リストから配列に変換
-    x = np.array(data).reshape(len(data), int((length_end - length_start)/skip_num))
+    x = np.array(data).reshape(len(data), int((length_end - length_start) / skip_num))
     print(x)
     scaler = StandardScaler()
     x = scaler.fit_transform(x)
@@ -195,26 +217,35 @@ def main():
     # データを訓練用とテスト用に分割
     # train_x, test_x, train_y, test_y = train_test_split(data, target, test_size=0.2, random_state=42)
 
-
     # ハイパーパラメータ
-    embed_dim = 64     # 埋め込み次元数. num_headsで割り切れる数じゃないとダメ
-    num_heads = 8      # マルチヘッドアテンション内のヘッド数
-    ff_dim = 64        # フィードフォワードネットワークの中間層のニューロン数
-    num_classes = 3    # 分類するクラス数
-    num_layers = 6     # Transformerの段数
+    embed_dim = 64  # 埋め込み次元数. num_headsで割り切れる数じゃないとダメ
+    num_heads = 8  # マルチヘッドアテンション内のヘッド数
+    ff_dim = 64  # フィードフォワードネットワークの中間層のニューロン数
+    num_classes = 3  # 分類するクラス数
+    num_layers = 6  # Transformerの段数
 
     # モデルを保存する頻度を指定
     save_freq = 100
     custom_checkpoint = CustomModelCheckpoint(save_freq)
 
     # モデルのインスタンス化
-    model = TransformerClassifier(num_classes, embed_dim, num_heads, ff_dim, num_layers=num_layers, input_shape=(x_train.shape[1],))
+    model = TransformerClassifier(
+        num_classes,
+        embed_dim,
+        num_heads,
+        ff_dim,
+        num_layers=num_layers,
+        input_shape=(x_train.shape[1],),
+    )
 
     # モデルのコンパイル
-    model.compile(optimizer=tf.keras.optimizers.Adam(), loss='categorical_crossentropy', metrics=['accuracy'])
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(),
+        loss="categorical_crossentropy",
+        metrics=["accuracy"],
+    )
 
-
-    '''
+    """
     # 保存されたモデルをロード
     model_name = "transformer_iris_epoch_100"  # この部分は、適切なモデル名に変更してください
     model = tf.keras.models.load_model(model_name)
@@ -226,15 +257,17 @@ def main():
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
                      loss='categorical_crossentropy',
                      metrics=["accuracy"])
-    '''
+    """
 
     # モデルの訓練
-    history = model.fit(x_train, t_train, batch_size=12, epochs=100, validation_split=0.2)
+    history = model.fit(
+        x_train, t_train, batch_size=12, epochs=100, validation_split=0.2
+    )
 
     # モデルの評価
     loss, accuracy = model.evaluate(x_test, t_test)
-    print('Test loss:', loss)
-    print('Test accuracy:', accuracy)
+    print("Test loss:", loss)
+    print("Test accuracy:", accuracy)
 
     t_test_change = []
     for i in range(len(t_test)):
@@ -248,6 +281,5 @@ def main():
     print_mtrix(true_classes, predict_classes)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
-
