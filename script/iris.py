@@ -1,9 +1,8 @@
 from unittest import skip
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.datasets import load_iris
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix
-from keras import layers, Model
+from keras import layers, Model, Input
 from keras.utils import to_categorical, np_utils
 import numpy as np
 import pandas as pd
@@ -129,6 +128,11 @@ class TransformerClassifier(Model):
         x = self.pool(x)
         x = self.dropout(x, training=training)
         return self.classifier(x)
+    def my_summary(self, input_shape, training) :
+       tmp_x = Input(shape=input_shape, name='input')
+       tmp_m = Model(inputs=[tmp_x], outputs=self.call(tmp_x, training), name='transformer_block')
+       tmp_m.summary()
+       del tmp_x, tmp_m
 
 
 # カスタムコールバックの定義
@@ -264,6 +268,7 @@ def main():
         x_train, t_train, batch_size=12, epochs=100, validation_split=0.2
     )
 
+    model.my_summary(x_train.shape, True)
     # モデルの評価
     loss, accuracy = model.evaluate(x_test, t_test)
     print("Test loss:", loss)
