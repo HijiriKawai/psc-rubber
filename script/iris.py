@@ -14,7 +14,7 @@ import os
 home = os.environ["HOME"]
 
 
-def print_mtrix(t_true, t_predict):
+def print_mtrix(t_true, t_predict, length_start, length_end, iter_num):
     mtrix_data = confusion_matrix(t_true, t_predict)
     df_mtrix = pd.DataFrame(
         mtrix_data,
@@ -27,7 +27,7 @@ def print_mtrix(t_true, t_predict):
     plt.title("TRANSFORMERBLOCK")
     plt.xlabel("Predictit label", fontsize=13)
     plt.ylabel("True label", fontsize=13)
-    plt.savefig(f"{home}/result/iris/iris_matrix.png")
+    plt.savefig(f"{home}/result/iris/iris_{length_start}_to_{length_end}_matrix_{iter_num:02}.png")
 
 
 # Transformer用のMultiHeadAttentionレイヤーを定義
@@ -148,7 +148,7 @@ class CustomModelCheckpoint(tf.keras.callbacks.Callback):
             print(f"\nModel saved as {model_name}\n")
 
 
-def main():
+def task(length_start = 1500, length_end = 3000, iter_num = 0):
     # 445g
     csv_convex = np.loadtxt(
         f"{home}/data/convex.csv", delimiter=",", encoding="utf_8_sig", unpack=True
@@ -169,8 +169,6 @@ def main():
 
     # %%
     # データを格納、学習に使う長さを指定
-    length_start = 1500
-    length_end = 3000
     skip_num = 2
 
     data = []  # 入力値
@@ -283,8 +281,11 @@ def main():
     predict_classes = np.argmax(predict_prob, axis=1)
     true_classes = t_test_change
 
-    print_mtrix(true_classes, predict_classes)
+    print_mtrix(true_classes, predict_classes, length_start, length_end, iter_num)
 
+def main():
+    for i in range(0, 10): 
+        task(length_start=0, length_end=200, iter_num=i)
 
 if __name__ == "__main__":
     main()
