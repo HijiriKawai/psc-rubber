@@ -63,4 +63,4 @@ plt.legend(fontsize=30)
 
 #%%
 # グラフの保存
-plt.savefig(f"{home}/data/plot_all_dataset_0_to_200.png")
+plt.savefig(f"{home}/data/plot_all_dataset_0_to_40.png")
