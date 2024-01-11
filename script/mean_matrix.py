@@ -33,14 +33,24 @@ plt.figure(dpi=700)
 # cm_0_to_80 = useful_graphs.ConfusionMatrix(matrix_0_to_80,class_list=classes_0_to_80)
 # cm_0_to_80.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_80_matrix_mean.png')
 
-matrix_0_to_4000 = np.array([
-                     [19.9, 0.1, 0.0],
-                     [1.2, 18.5, 0.3],
+matrix_0_to_120 = np.array([
+                     [19.1, 0.6, 0.3],
+                     [0.4, 19.6, 0.3],
                      [0.0, 0.0, 20.0],
                    ])
-classes_0_to_4000 = ["445g", "692g", "1118g"]
-cm_0_to_4000 = useful_graphs.ConfusionMatrix(matrix_0_to_4000,class_list=classes_0_to_4000)
-cm_0_to_4000.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_4000_matrix_mean.png')
+classes_0_to_120 = ["445g", "692g", "1118g"]
+cm_0_to_120 = useful_graphs.ConfusionMatrix(matrix_0_to_120,class_list=classes_0_to_120)
+cm_0_to_120.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_120_matrix_mean.png')
+
+
+# matrix_0_to_4000 = np.array([
+#                      [19.9, 0.1, 0.0],
+#                      [1.2, 18.5, 0.3],
+#                      [0.0, 0.0, 20.0],
+#                    ])
+# classes_0_to_4000 = ["445g", "692g", "1118g"]
+# cm_0_to_4000 = useful_graphs.ConfusionMatrix(matrix_0_to_4000,class_list=classes_0_to_4000)
+# cm_0_to_4000.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_4000_matrix_mean.png')
 
 
 # 1500_to_3000の混合行列
