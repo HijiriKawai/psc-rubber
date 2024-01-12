@@ -1,0 +1,6 @@
+{
+  "python.analysis.extraPaths": [
+    "/usr/lib/python3.8/site-packages",
+    "/home/ubuntu/python3-venv/lib/python3.8/site-packages",
+  ],
+}
