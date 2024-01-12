@@ -42,14 +42,41 @@ plt.figure(dpi=700)
 # cm_0_to_120 = useful_graphs.ConfusionMatrix(matrix_0_to_120,class_list=classes_0_to_120)
 # cm_0_to_120.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_120_matrix_mean.png')
 
-matrix_0_to_160 = np.array([
-                     [20.0, 0.0, 0.0],
-                     [0.1, 19.9, 0.0],
-                     [0.1, 0.4, 19.5],
+# matrix_0_to_160 = np.array([
+#                      [20.0, 0.0, 0.0],
+#                      [0.1, 19.9, 0.0],
+#                      [0.1, 0.4, 19.5],
+#                    ])
+# classes_0_to_160 = ["445g", "692g", "1118g"]
+# cm_0_to_160 = useful_graphs.ConfusionMatrix(matrix_0_to_160,class_list=classes_0_to_160)
+# cm_0_to_160.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_160_matrix_mean.png')
+
+# matrix_0_to_20 = np.array([
+#                      [19.6, 0.4, 0.0],
+#                      [0.0, 19.5, 0.5],
+#                      [0.0, 0.0, 20.0],
+#                    ])
+# classes_0_to_20 = ["445g", "692g", "1118g"]
+# cm_0_to_20 = useful_graphs.ConfusionMatrix(matrix_0_to_20,class_list=classes_0_to_20)
+# cm_0_to_20.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_20_matrix_mean.png')
+
+# matrix_0_to_10 = np.array([
+#                      [19.8, 0.2, 0.0],
+#                      [1.3, 17.7, 1.0],
+#                      [0.8, 0.7, 18.5],
+#                    ])
+# classes_0_to_10 = ["445g", "692g", "1118g"]
+# cm_0_to_10 = useful_graphs.ConfusionMatrix(matrix_0_to_10,class_list=classes_0_to_10)
+# cm_0_to_10.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_10_matrix_mean.png')
+
+matrix_0_to_4 = np.array([
+                     [14.9, 2.9, 2.2],
+                     [2.9, 14.0, 3.1],
+                     [1.0, 4.4, 14.6],
                    ])
-classes_0_to_160 = ["445g", "692g", "1118g"]
-cm_0_to_160 = useful_graphs.ConfusionMatrix(matrix_0_to_160,class_list=classes_0_to_160)
-cm_0_to_160.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_160_matrix_mean.png')
+classes_0_to_4 = ["445g", "692g", "1118g"]
+cm_0_to_4 = useful_graphs.ConfusionMatrix(matrix_0_to_4,class_list=classes_0_to_4)
+cm_0_to_4.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_4_matrix_mean.png')
 
 
 # matrix_0_to_4000 = np.array([

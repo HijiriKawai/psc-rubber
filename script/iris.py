@@ -285,7 +285,7 @@ def task(length_start = 1500, length_end = 3000, iter_num = 0):
 
 def main():
     for i in range(0, 10): 
-        task(length_start=0, length_end=160, iter_num=i)
+        task(length_start=0, length_end=4, iter_num=i)
 
 if __name__ == "__main__":
     main()
