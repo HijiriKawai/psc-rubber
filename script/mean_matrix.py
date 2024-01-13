@@ -24,6 +24,15 @@ plt.figure(dpi=700)
 # cm_0_to_40 = useful_graphs.ConfusionMatrix(matrix_0_to_40,class_list=classes_0_to_40)
 # cm_0_to_40.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_40_matrix_mean.png')
 
+# sa_matrix_0_to_40 = np.array([
+#                      [19.0, 0.6, 0.4],
+#                      [0.3, 19.5, 0.2],
+#                      [0.0, 0.7, 19.3],
+#                    ])
+# classes_0_to_40 = ["445g", "692g", "1118g"]
+# sa_cm_0_to_40 = useful_graphs.ConfusionMatrix(sa_matrix_0_to_40,class_list=classes_0_to_40)
+# sa_cm_0_to_40.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/self-attention/sa_0_to_40_matrix_mean.png')
+
 # matrix_0_to_80 = np.array([
 #                      [19.8, 0.0, 0.2],
 #                      [0.4, 18.9, 0.7],
@@ -87,14 +96,23 @@ plt.figure(dpi=700)
 # cm_40_to_80 = useful_graphs.ConfusionMatrix(matrix_40_to_80,class_list=classes_40_to_80)
 # cm_40_to_80.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_40_to_80_matrix_mean.png')
 
-matrix_1500_to_1540 = np.array([
-                     [20.0, 0.0, 0.0],
-                     [3.9, 16.0, 0.1],
-                     [0.0, 0.1, 19.9],
+# matrix_1500_to_1540 = np.array([
+#                      [20.0, 0.0, 0.0],
+#                      [3.9, 16.0, 0.1],
+#                      [0.0, 0.1, 19.9],
+#                    ])
+# classes_1500_to_1540 = ["445g", "692g", "1118g"]
+# cm_1500_to_1540 = useful_graphs.ConfusionMatrix(matrix_1500_to_1540,class_list=classes_1500_to_1540)
+# cm_1500_to_1540.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_1500_to_1540_matrix_mean.png')
+
+sa_matrix_1500_to_1540 = np.array([
+                     [19.5, 0.4, 0.1],
+                     [1.2, 18.1, 0.7],
+                     [0.0, 1.1, 18.9],
                    ])
 classes_1500_to_1540 = ["445g", "692g", "1118g"]
-cm_1500_to_1540 = useful_graphs.ConfusionMatrix(matrix_1500_to_1540,class_list=classes_1500_to_1540)
-cm_1500_to_1540.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_1500_to_1540_matrix_mean.png')
+sa_cm_1500_to_1540 = useful_graphs.ConfusionMatrix(sa_matrix_1500_to_1540,class_list=classes_1500_to_1540)
+sa_cm_1500_to_1540.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/self-attention/sa_1500_to_1540_matrix_mean.png')
 
 
 # matrix_0_to_4000 = np.array([
