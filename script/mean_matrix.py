@@ -69,14 +69,32 @@ plt.figure(dpi=700)
 # cm_0_to_10 = useful_graphs.ConfusionMatrix(matrix_0_to_10,class_list=classes_0_to_10)
 # cm_0_to_10.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_10_matrix_mean.png')
 
-matrix_0_to_4 = np.array([
-                     [14.9, 2.9, 2.2],
-                     [2.9, 14.0, 3.1],
-                     [1.0, 4.4, 14.6],
+# matrix_0_to_4 = np.array([
+#                      [14.9, 2.9, 2.2],
+#                      [2.9, 14.0, 3.1],
+#                      [1.0, 4.4, 14.6],
+#                    ])
+# classes_0_to_4 = ["445g", "692g", "1118g"]
+# cm_0_to_4 = useful_graphs.ConfusionMatrix(matrix_0_to_4,class_list=classes_0_to_4)
+# cm_0_to_4.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_4_matrix_mean.png')
+
+# matrix_40_to_80 = np.array([
+#                      [19.8, 0.0, 0.2],
+#                      [0.2, 19.8, 0.0],
+#                      [0.7, 0.0, 19.3],
+#                    ])
+# classes_40_to_80 = ["445g", "692g", "1118g"]
+# cm_40_to_80 = useful_graphs.ConfusionMatrix(matrix_40_to_80,class_list=classes_40_to_80)
+# cm_40_to_80.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_40_to_80_matrix_mean.png')
+
+matrix_1500_to_1540 = np.array([
+                     [20.0, 0.0, 0.0],
+                     [3.9, 16.0, 0.1],
+                     [0.0, 0.1, 19.9],
                    ])
-classes_0_to_4 = ["445g", "692g", "1118g"]
-cm_0_to_4 = useful_graphs.ConfusionMatrix(matrix_0_to_4,class_list=classes_0_to_4)
-cm_0_to_4.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_4_matrix_mean.png')
+classes_1500_to_1540 = ["445g", "692g", "1118g"]
+cm_1500_to_1540 = useful_graphs.ConfusionMatrix(matrix_1500_to_1540,class_list=classes_1500_to_1540)
+cm_1500_to_1540.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_1500_to_1540_matrix_mean.png')
 
 
 # matrix_0_to_4000 = np.array([
