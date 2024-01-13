@@ -134,20 +134,6 @@ class TransformerClassifier(Model):
        tmp_m.summary()
        del tmp_x, tmp_m
 
-
-# カスタムコールバックの定義
-class CustomModelCheckpoint(tf.keras.callbacks.Callback):
-    def __init__(self, save_freq):
-        super(CustomModelCheckpoint, self).__init__()
-        self.save_freq = save_freq
-
-    def on_epoch_end(self, epoch, logs=None):
-        if (epoch + 1) % self.save_freq == 0:
-            model_name = f"transformer_iris_epoch_{epoch + 1}"
-            self.model.save(model_name, save_format="tf")  # save_format="tf" を追加
-            print(f"\nModel saved as {model_name}\n")
-
-
 def task(length_start = 1500, length_end = 3000, iter_num = 0):
     # 445g
     csv_convex = np.loadtxt(
@@ -207,28 +193,12 @@ def task(length_start = 1500, length_end = 3000, iter_num = 0):
         x_test, t_test, test_size=int(len(x_test) * 0.5), stratify=t_test
     )
 
-    # データセットの読み込み
-    # iris = load_iris()
-    # data = iris.data
-    # target = to_categorical(iris.target)
-
-    # データの前処理
-    # scaler = StandardScaler()
-    # data = scaler.fit_transform(data)
-
-    # データを訓練用とテスト用に分割
-    # train_x, test_x, train_y, test_y = train_test_split(data, target, test_size=0.2, random_state=42)
-
     # ハイパーパラメータ
     embed_dim = 64  # 埋め込み次元数. num_headsで割り切れる数じゃないとダメ
     num_heads = 8  # マルチヘッドアテンション内のヘッド数
     ff_dim = 64  # フィードフォワードネットワークの中間層のニューロン数
     num_classes = 3  # 分類するクラス数
     num_layers = 6  # Transformerの段数
-
-    # モデルを保存する頻度を指定
-    save_freq = 100
-    custom_checkpoint = CustomModelCheckpoint(save_freq)
 
     # モデルのインスタンス化
     model = TransformerClassifier(
