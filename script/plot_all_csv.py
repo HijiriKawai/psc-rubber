@@ -2,7 +2,6 @@
 from cProfile import label
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.font_manager
 import os
 
 home = os.environ["HOME"]

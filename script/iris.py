@@ -1,9 +1,8 @@
-from unittest import skip
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix
 from keras import layers, Model, Input
-from keras.utils import to_categorical, np_utils
+from keras.utils import np_utils
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
