@@ -24,6 +24,15 @@ plt.figure(dpi=700)
 # cm_0_to_40 = useful_graphs.ConfusionMatrix(matrix_0_to_40,class_list=classes_0_to_40)
 # cm_0_to_40.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_0_to_40_matrix_mean.png')
 
+# none_matrix_0_to_40 = np.array([
+#                      [12.0, 2.0, 6.0],
+#                      [12.0, 2.0, 6.0],
+#                      [12.0, 2.0, 6.0],
+#                    ])
+# classes_0_to_40 = ["445g", "692g", "1118g"]
+# none_cm_0_to_40 = useful_graphs.ConfusionMatrix(none_matrix_0_to_40,class_list=classes_0_to_40)
+# none_cm_0_to_40.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris_none/iris_none_0_to_40_matrix_mean.png')
+
 # sa_matrix_0_to_40 = np.array([
 #                      [19.0, 0.6, 0.4],
 #                      [0.3, 19.5, 0.2],
@@ -32,6 +41,15 @@ plt.figure(dpi=700)
 # classes_0_to_40 = ["445g", "692g", "1118g"]
 # sa_cm_0_to_40 = useful_graphs.ConfusionMatrix(sa_matrix_0_to_40,class_list=classes_0_to_40)
 # sa_cm_0_to_40.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/self-attention/sa_0_to_40_matrix_mean.png')
+
+# sa_none_matrix_0_to_40 = np.array([
+#                      [15.1, 3.1, 1.8],
+#                      [6.6, 9.8, 3.6],
+#                      [5.4, 4.1, 10.5],
+#                    ])
+# classes_0_to_40 = ["445g", "692g", "1118g"]
+# sa_none_cm_0_to_40 = useful_graphs.ConfusionMatrix(sa_none_matrix_0_to_40,class_list=classes_0_to_40)
+# sa_none_cm_0_to_40.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/self-attention_none/sa_none_0_to_40_matrix_mean.png')
 
 # matrix_0_to_80 = np.array([
 #                      [19.8, 0.0, 0.2],
@@ -105,15 +123,32 @@ plt.figure(dpi=700)
 # cm_1500_to_1540 = useful_graphs.ConfusionMatrix(matrix_1500_to_1540,class_list=classes_1500_to_1540)
 # cm_1500_to_1540.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris/iris_1500_to_1540_matrix_mean.png')
 
-sa_matrix_1500_to_1540 = np.array([
-                     [19.5, 0.4, 0.1],
-                     [1.2, 18.1, 0.7],
-                     [0.0, 1.1, 18.9],
+# none_matrix_1500_to_1540 = np.array([
+#                      [17.2, 2.6, 0.2],
+#                      [10.1, 5.7, 4.2],
+#                      [1.0, 4.5, 14.5],
+#                    ])
+# classes_1500_to_1540 = ["445g", "692g", "1118g"]
+# none_cm_1500_to_1540 = useful_graphs.ConfusionMatrix(none_matrix_1500_to_1540,class_list=classes_1500_to_1540)
+# none_cm_1500_to_1540.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/iris_none/iris_none_1500_to_1540_matrix_mean.png')
+
+# sa_matrix_1500_to_1540 = np.array([
+#                      [19.5, 0.4, 0.1],
+#                      [1.2, 18.1, 0.7],
+#                      [0.0, 1.1, 18.9],
+#                    ])
+# classes_1500_to_1540 = ["445g", "692g", "1118g"]
+# sa_cm_1500_to_1540 = useful_graphs.ConfusionMatrix(sa_matrix_1500_to_1540,class_list=classes_1500_to_1540)
+# sa_cm_1500_to_1540.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/self-attention/sa_1500_to_1540_matrix_mean.png')
+
+sa_none_matrix_1500_to_1540 = np.array([
+                     [19.8, 0.2, 0.0],
+                     [2.6, 14.7, 2.7],
+                     [0.7, 1.9, 17.4],
                    ])
 classes_1500_to_1540 = ["445g", "692g", "1118g"]
-sa_cm_1500_to_1540 = useful_graphs.ConfusionMatrix(sa_matrix_1500_to_1540,class_list=classes_1500_to_1540)
-sa_cm_1500_to_1540.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/self-attention/sa_1500_to_1540_matrix_mean.png')
-
+sa_none_cm_1500_to_1540 = useful_graphs.ConfusionMatrix(sa_none_matrix_1500_to_1540,class_list=classes_1500_to_1540)
+sa_none_cm_1500_to_1540.plot(to_normalize=True,to_show_number_label=True,text_font_size=10,save_path='result/self-attention_none/sa_none_1500_to_1540_matrix_mean.png')
 
 # matrix_0_to_4000 = np.array([
 #                      [19.9, 0.1, 0.0],
