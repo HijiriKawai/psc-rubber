@@ -231,7 +231,7 @@ def task(length_start = 1500, length_end = 3000, iter_num = 0):
     """
 
     # モデルの訓練
-    csv_logger = tf.keras.callbacks.CSVLogger('training.csv')
+    csv_logger = tf.keras.callbacks.CSVLogger(f"{home}/data/training_{iter_num:02}.csv")
     history = model.fit(
         x_train, t_train, batch_size=12, epochs=100, validation_split=0.2, callbacks=[csv_logger]
     )
@@ -254,9 +254,8 @@ def task(length_start = 1500, length_end = 3000, iter_num = 0):
     print_mtrix(true_classes, predict_classes, length_start, length_end, iter_num)
 
 def main():
-    # for i in range(0, 10): 
-    #     task(length_start=1500, length_end=1540, iter_num=i)
-    task(length_start=0, length_end=40, iter_num=99)
+    for i in range(10, 20): 
+         task(length_start=0, length_end=40, iter_num=i)
 
 if __name__ == "__main__":
     main()
